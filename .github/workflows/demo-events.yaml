@@ -1,0 +1,72 @@
+name: Demo trigger events
+
+on:
+  # Webhook events
+  push:
+    branches:
+      - main
+      - feat/*
+  pull_request:
+    branches:
+      - main
+  issues:
+    types:
+      - opened
+      - closed
+  # Schedule events
+  schedule:
+    - cron: 0 0 * * *
+    - cron: 0 9 * * 0
+  # Manual events
+  workflow_dispatch:
+    inputs:
+      yourName:
+        description: Whats your name?
+        required: true
+        default: My friend
+      areYouFeelingGood:
+        description: Are you feeling good?
+        required: true
+        type: boolean
+      howDoYouFindGithubActions:
+        description: How do you find GitHub Actions?
+        required: false
+        type: choice
+        options:
+          - Awesome
+          - Okay
+          - Na
+env:
+  MY_NAME: Nilesh
+  GREETING: Hallo
+
+jobs:
+  Greeting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greeting step
+        run: echo Hello world!
+        if: ${{env.MY_NAME == 'Nilesh'}}
+  Greeting2:
+    runs-on: ubuntu-latest
+    env:
+      GREETING: Good morning
+    steps:
+      - name: "Greeting step (expeting GM Nilesh)"
+        run: echo ${{env.GREETING}} ${{env.MY_NAME}}
+      - name: "Greeting step (expeting GA Nilesh)"
+        run: echo ${{env.GREETING}} ${{env.MY_NAME}}
+        env:
+          GREETING: Good Afternoon !
+  Job2:
+    runs-on: ubuntu-latest
+    needs: [Greeting]
+    steps:
+      - name: Step2
+        run: echo "${{ github.actor }} is learning Github Actions."
+      - name: Step3
+        run: echo "Great!"
+        if: ${{inputs.areYouFeelingGood}}
+      - name: Step4
+        run: echo "No worries, I am here with you!"
+        if: ${{inputs.areYouFeelingGood == false}}
