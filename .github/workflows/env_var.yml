@@ -4,17 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       target_env:
-      description: 'Select the target environment'
-      type: choice
-      options:
-        - Staging
-        - Production
-        - Testing
-      default: Testing
+        description: 'Select the target environment'
+        type: choice
+        options:
+          - Staging
+          - Production
+          - Testing
+        default: Testing
 
       user_name:
         description: 'Enter your name'
-        type: string2
+        type: string
         required: true
         default: 'Guest'
 
@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name:  Show Selected Environment
-        run:
+        run: |
           echo "Selected Environment: ${{ inputs.target_env }}"
 
       - name: Display Message
